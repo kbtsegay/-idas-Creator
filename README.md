@@ -1,4 +1,4 @@
-# Kidase (ቅዳሴ) Creator
+# ᶻ 𝗓 𐰁 Kidase (ቅዳሴ) Creator
 
 **Kidase Creator** is a simple and efficient framework designed for generating day-specific and parish-specific slides for the Kidase (Eritrean and Ethiopian Orthodox Tewahdo Church liturgical service). This tool automates the process of selecting the appropriate hymns, prayers, and readings for each day, ensuring accuracy based on the Tewahdo Orthodox calendar.
 
