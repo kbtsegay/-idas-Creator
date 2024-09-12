@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 import numpy as np
 from pptx import Presentation
@@ -23,6 +24,20 @@ class KidaseCreator:
             'border_color': RGBColor(255, 255, 255),
             'border_thickness': Pt(1)  
         }
+        self.keyword_mapping = {
+            '፠ Priest:': RGBColor(255, 0, 0),  # Red
+            '፠ ካህን፤': RGBColor(255, 0, 0),    # Red
+            '፠ Asst. Priest:': RGBColor(255, 0, 0),  # Red
+            '፠ ካህን ንፍቅ፤': RGBColor(255, 0, 0),  # Red
+            '፠ Deacon:': RGBColor(0, 255, 0),  # Green
+            '፠ ዲያቆን፤': RGBColor(0, 255, 0),  # Green
+            '፠ Asst. Deacon:': RGBColor(0, 255, 0),  # Green
+            '፠ ዲያቆን ንፍቅ፤': RGBColor(0, 255, 0),  # Green
+            '፠ People:': RGBColor(255, 215, 0),  # Gold
+            '፠ ሕዝብ፤': RGBColor(255, 215, 0),  # Gold
+            '፠ ALL:': RGBColor(255, 215, 0),     # Gold
+            '፠ ኵሎሙ፤': RGBColor(255, 215, 0)  # Gold
+        }
         self.process_data()
 
     def process_data(self):
@@ -40,13 +55,38 @@ class KidaseCreator:
         '''
         left, top, width, height = slide_settings['text_box_position']
         textbox = slide.shapes.add_textbox(left, top, width, height)
-        p = textbox.text_frame.add_paragraph()
-        p.text = slide_settings['text']
-        p.font.name = slide_settings['font']
-        p.font.size = slide_settings['font_size']
-        p.font.color.rgb = slide_settings['font_color']
+        text_frame = textbox.text_frame
+        text_frame.margin_top = 0
+        text_frame.margin_bottom = 0
+        text_frame.word_wrap = True
+
+        text = slide_settings['text']
+
+        # Create a single paragraph for the entire text
+        p = text_frame.add_paragraph()
+        keywords = sorted(self.keyword_mapping.keys())
+        pattern = '|'.join(map(re.escape, keywords))
+
+        split_string = re.split(f'({pattern})', text)
+        split_string = [s for s in split_string if s]
+
+        # Go through each keyword and format it accordingly in the text
+        for string in split_string:
+            if string in self.keyword_mapping:
+                run = p.add_run()
+                run.text = string
+                run.font.color.rgb = self.keyword_mapping[string]
+            else:
+                run = p.add_run()
+                run.text = string
+                run.font.color.rgb = slide_settings['font_color']
+            run.font.name = slide_settings['font']
+            run.font.size = slide_settings['font_size']
+        
+        # Apply border settings for the text box
         textbox.line.color.rgb = slide_settings['border_color']
         textbox.line.width = slide_settings['border_thickness']
+
 
     def create_presentation(self):
         # Create a presentation object
@@ -76,3 +116,9 @@ class KidaseCreator:
                 raise ValueError("Only up to 4 languages are supported.")
         # Save the presentation
         prs.save('test.pptx')
+
+
+# Example usage with Geez, Tigrinya, and English languages
+if __name__ == '__main__':
+    kidase_creator = KidaseCreator('/mnt/c/Users/samg/Documents/Gits/KidaseCreator/data', ['ግእዝ', 'ትግርኛ', 'english'])
+    kidase_creator.create_presentation()
