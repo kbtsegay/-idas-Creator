@@ -1,13 +1,24 @@
 import os
+import base64
 import datetime
 import smtplib
+from argparse import ArgumentParser
+from email import encoders
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
-from email import encoders
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
 from google.auth.transport.urllib3 import AuthorizedHttp
 from src.kidase_creator import KidaseCreator
+
+
+def decode_credentials(encoded):
+    # Decode the base64 string
+    decoded = base64.b64decode(encoded)
+    # Write the decoded content to credentials.json
+    with open('credentials.json', 'wb') as file:
+        file.write(decoded)
+
 
 def send_email(file_path, recipient_email):
     try:
@@ -41,9 +52,17 @@ def send_email(file_path, recipient_email):
     except Exception as e:
         print(f"Error: {e}")
 
+
 # Example usage
 if __name__ == '__main__':
+    parser = ArgumentParser(description='Decode the base64 encoded credentials')
+    parser.add_argument('encoded', type=str, help='The base64 encoded credentials')
+    args = parser.parse_args()
+
+    decode_credentials(args.encoded)
+
     kidase_creator = KidaseCreator('./data', ['ግእዝ', 'ትግርኛ', 'english'])
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
+    
     send_email('test.pptx', 'kaleb.tsegay@gmail.com')
