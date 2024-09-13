@@ -11,9 +11,9 @@ def decode_credentials(encoded):
     with open('credentials.json', 'wb') as file:
         file.write(decoded)
 
-def send_email(file_path, recipient_email):
+def send_email(sender_email, recipient_email, attachment_path):
     # Initialize yagmail with OAuth2 credentials
-    yag = yagmail.SMTP("kidasecreator.noreply@gmail.com", oauth2_file="./credentials.json")
+    yag = yagmail.SMTP(sender_email, oauth2_file="./credentials.json")
     
     # Create the email content
     subject = "Your Kidase Slide Deck"
@@ -38,6 +38,7 @@ if __name__ == '__main__':
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
     
+    sender_email = os.environ['EMAIL_ADDRESS']
     responses = os.environ['FORM_RESPONSES']
     print(responses)
-    send_email('test.pptx', args.recepient_email)
+    #send_email(sender_email, args.recepient_email, 'test.pptx')
