@@ -1,16 +1,8 @@
 import os
 import base64
-import datetime
+import yagmail
 from argparse import ArgumentParser
-from email import encoders
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from google.oauth2 import service_account
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from src.kidase_creator import KidaseCreator
-
 
 def decode_credentials(encoded):
     # Decode the base64 string
@@ -19,43 +11,21 @@ def decode_credentials(encoded):
     with open('credentials.json', 'wb') as file:
         file.write(decoded)
 
-
 def send_email(file_path, recipient_email):
-    try:
-        # Load OAuth 2.0 credentials
-        credentials = service_account.Credentials.from_service_account_file(
-            'credentials.json',
-            scopes=['https://www.googleapis.com/auth/gmail.send']
-        )
-        credentials.refresh(Request())
-        
-        # Create the email
-        msg = MIMEMultipart()
-        msg['From'] = os.environ['EMAIL_ADDRESS']
-        msg['To'] = recipient_email
-        msg['Subject'] = f'Your Kidase Slidedeck for {datetime.datetime.now().strftime("%B %d, %Y")}'
-
-        part = MIMEBase('application', 'octet-stream')
-        part.set_payload(open(file_path, 'rb').read())
-        encoders.encode_base64(part)
-        part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(file_path)}"')
-        msg.attach(part)
-
-        # Encode the email in base64
-        raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
-
-        # Create the Gmail API service
-        service = build('gmail', 'v1', credentials=credentials)
-
-        # Send the email
-        message = {'raw': raw}
-        sent_message = service.users().messages().send(userId='me', body=message).execute()
-        print(f"Email sent successfully: {sent_message['id']}")
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-    except Exception as e:
-        print(f"Error: {e}")
-
+    # Initialize yagmail with OAuth2 credentials
+    yag = yagmail.SMTP("kidasecreator.noreply@gmail.com", oauth2_file="./credentials.json")
+    
+    # Create the email content
+    subject = "Your Presentation"
+    body = "Please find the attached presentation."
+    
+    # Send the email with the attachment
+    yag.send(
+        to=recipient_email,
+        subject=subject,
+        contents=body,
+        attachments=file_path
+    )
 
 # Example usage
 if __name__ == '__main__':
