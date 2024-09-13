@@ -23,11 +23,11 @@ jobs:
       
       - name: Decode and save credentials.json
         run: |
-          echo ${{ secrets.GOOGLE_CREDENTIALS }} | base64 --decode > credentials.json
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" > encoded_credentials.txt
+          python -c "import base64; import os; encoded = open('encoded_credentials.txt').read(); decoded = base64.b64decode(encoded); with open('credentials.json', 'wb') as f: f.write(decoded)"
 
       - name: Run script
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDR }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASS }}
         run: python create_slides.py
-
