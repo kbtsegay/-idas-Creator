@@ -1,5 +1,6 @@
 import os
 import base64
+import json
 import yagmail
 import datetime
 from src.kidase_creator import KidaseCreator
@@ -39,8 +40,8 @@ if __name__ == '__main__':
     prs.save('test.pptx')
     
     sender_email = os.environ['EMAIL_ADDRESS']
-    responses = os.environ['FORM_RESPONSES']
-    print(type(responses))
+    responses = json.loads(os.environ['FORM_RESPONSES'])
+    print(responses)
     print(len(responses))
-    print(responses[1])
+    print(type(responses))
     #send_email(sender_email, args.recepient_email, 'test.pptx')
