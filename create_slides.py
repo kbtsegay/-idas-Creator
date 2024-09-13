@@ -59,10 +59,11 @@ if __name__ == '__main__':
     parser.add_argument('encoded', type=str, help='The base64 encoded credentials')
     args = parser.parse_args()
 
+    print('Decoding credentials...')
     decode_credentials(args.encoded)
 
     kidase_creator = KidaseCreator('./data', ['ግእዝ', 'ትግርኛ', 'english'])
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
-    
+
     send_email('test.pptx', 'kaleb.tsegay@gmail.com')
