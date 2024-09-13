@@ -116,9 +116,3 @@ class KidaseCreator:
                 raise ValueError("Only up to 4 languages are supported.")
         # Save the presentation
         prs.save('test.pptx')
-
-
-# Example usage with Geez, Tigrinya, and English languages
-if __name__ == '__main__':
-    kidase_creator = KidaseCreator('/mnt/c/Users/samg/Documents/Gits/KidaseCreator/data', ['ግእዝ', 'ትግርኛ', 'english'])
-    kidase_creator.create_presentation()
