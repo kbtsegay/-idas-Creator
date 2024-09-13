@@ -36,8 +36,9 @@ if __name__ == '__main__':
 
     sender_email = os.environ['EMAIL_ADDRESS']
     responses = json.loads(os.environ['FORM_RESPONSES'])
+    print(responses)
     recipient_email = responses[1]
-    
+
     print('Creating the Kidase presentation...')
     kidase_creator = KidaseCreator('./data', ['ግእዝ', 'ትግርኛ', 'english'])
     prs = kidase_creator.create_presentation()
