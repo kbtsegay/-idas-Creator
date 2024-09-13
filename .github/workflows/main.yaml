@@ -24,4 +24,4 @@ jobs:
       - name: Run script
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDR }}
-        run: python create_slides.py ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: python create_slides.py "${{ secrets.GOOGLE_CREDENTIALS }}"
