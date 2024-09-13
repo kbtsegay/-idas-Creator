@@ -21,10 +21,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Decode and save credentials.json
-        run: |
-          echo "${{ secrets.GOOGLE_CREDENTIALS }}" > encoded_credentials.txt
-          python google_auth.py
-
       - name: Run script
-        run: python create_slides.py
+        run: python create_slides.py ${{ secrets.GOOGLE_CREDENTIALS }}
