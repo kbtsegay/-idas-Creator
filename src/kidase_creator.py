@@ -45,7 +45,7 @@ class KidaseCreator:
         '''
         for lang in self.languages:
             if lang not in self.order_of_the_liturgy.columns:
-                raise ValueError(f"Language '{lang}' not found in the data.")
+                raise ValueError(f'Language \"{lang}\" not found in the data.')
             self.order_of_the_liturgy[lang] = self.order_of_the_liturgy[lang].fillna('')
 
     def format_slide(self, slide, slide_settings):
@@ -92,7 +92,7 @@ class KidaseCreator:
         prs = Presentation()
         prs.slide_height = Emu(5.5 * 914400) # 5.5 inches to EMU
         slide_layout = prs.slide_layouts[6]  # Blank layout
-        for i in tqdm(range(len(self.order_of_the_liturgy)), desc="Creating slides"):
+        for i in tqdm(range(len(self.order_of_the_liturgy)), desc='Creating slides'):
             slide = prs.slides.add_slide(slide_layout)
             slide.background.fill.solid()
             slide.background.fill.fore_color.rgb = self.slide_settings['background_color']  # Black color
@@ -112,6 +112,6 @@ class KidaseCreator:
                     self.slide_settings['text'] = self.order_of_the_liturgy[lang][i]
                     self.format_slide(slide, self.slide_settings)
             else:
-                raise ValueError("Only up to 4 languages are supported.")
+                raise ValueError('Only up to 4 languages are supported.')
 
         return prs
