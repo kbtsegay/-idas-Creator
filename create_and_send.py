@@ -25,7 +25,7 @@ def send_email(sender_email, recipient_email, attachment_path):
         to=recipient_email,
         subject=subject,
         contents=body,
-        attachments=file_path
+        attachments=attachment_path
     )
 
 # Example usage
