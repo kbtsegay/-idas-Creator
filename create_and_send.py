@@ -37,7 +37,16 @@ if __name__ == '__main__':
     sender_email = os.environ['EMAIL_ADDRESS']
     responses = json.loads(os.environ['FORM_RESPONSES'])
     recipient_email = responses[1]
-    languages = [lang for lang in responses[2:6] if lang != '']
+    lang_form_mapping = {
+        'ግዕዝ': 'ግእዝ',
+        'Ge\'ez (Transliterated)': 'ge\'ez',
+        'አማርኛ': 'አማርኛ',
+        'Amharic (Transliterated)': 'amharic',
+        'ትግርኛ': 'ትግርኛ',
+        'Tigrinya (Transliterated)': 'tigrinya',
+        'English': 'english'
+    }
+    languages = [lang_form_mapping[lang] for lang in responses[2:6] if lang != '']
 
     print('Creating the Kidase presentation...')
     kidase_creator = KidaseCreator('./data', languages)
