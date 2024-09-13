@@ -23,7 +23,7 @@ jobs:
 
       - name: Run script
         env:
-          EMAIL_ADDRESS: ${{ secrets.BABS_EMAIL_ADDR }}
-          EMAIL_PASSWORD: ${{ secrets.BABS_EMAIL_PASS }}
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDR }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASS }}
         run: python create_slides.py
 
