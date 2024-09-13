@@ -3,3 +3,4 @@ python-pptx
 openpyxl
 tqdm
 google-auth
+requests
