@@ -1,4 +1,5 @@
 import os
+import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -10,7 +11,7 @@ def send_email(file_path, recipient_email):
         msg = MIMEMultipart()
         msg['From'] = os.getenv('EMAIL_ADDRESS')
         msg['To'] = recipient_email
-        msg['Subject'] = 'Your PowerPoint File'
+        msg['Subject'] = f'Your Kidase Slidedeck for {datetime.datetime.now().strftime("%B %d, %Y")}'
 
         part = MIMEBase('application', 'octet-stream')
         part.set_payload(open(file_path, 'rb').read())
@@ -18,7 +19,7 @@ def send_email(file_path, recipient_email):
         part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(file_path)}"')
         msg.attach(part)
 
-        server = smtplib.SMTP('smtp.example.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com', 587)  # Update this line with the correct SMTP server
         server.starttls()
         server.login(os.getenv('EMAIL_ADDRESS'), os.getenv('EMAIL_PASSWORD'))
         server.sendmail(os.getenv('EMAIL_ADDRESS'), recipient_email, msg.as_string())
