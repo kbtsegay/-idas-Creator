@@ -4,3 +4,4 @@ openpyxl
 tqdm
 google-auth
 requests
+packaging
