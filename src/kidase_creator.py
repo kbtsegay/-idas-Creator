@@ -1,7 +1,6 @@
 import os
 import re
 import pandas as pd
-import numpy as np
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.util import Inches, Emu, Pt
