@@ -31,7 +31,7 @@ def send_email(file_path, recipient_email):
         
         # Create the email
         msg = MIMEMultipart()
-        msg['From'] = 'your-email@gmail.com'
+        msg['From'] = os.environ['EMAIL_ADDRESS']
         msg['To'] = recipient_email
         msg['Subject'] = f'Your Kidase Slidedeck for {datetime.datetime.now().strftime("%B %d, %Y")}'
 
