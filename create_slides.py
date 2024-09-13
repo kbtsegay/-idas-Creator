@@ -1,15 +1,13 @@
 import os
 import base64
 import datetime
-import smtplib
-from argparse import ArgumentParser
 from email import encoders
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from google.oauth2 import service_account
 from google.auth.transport.requests import Request
-from google.auth.transport.urllib3 import AuthorizedHttp
-from src.kidase_creator import KidaseCreator
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 
 def decode_credentials(encoded):
@@ -19,7 +17,7 @@ def decode_credentials(encoded):
     with open('credentials.json', 'wb') as file:
         file.write(decoded)
 
-
+        
 def send_email(file_path, recipient_email):
     try:
         # Load OAuth 2.0 credentials
@@ -41,14 +39,18 @@ def send_email(file_path, recipient_email):
         part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(file_path)}"')
         msg.attach(part)
 
+        # Encode the email in base64
+        raw = base64.urlsafe_b64encode(msg.as_bytes()).decode()
+
+        # Create the Gmail API service
+        service = build('gmail', 'v1', credentials=credentials)
+
         # Send the email
-        authorized_http = AuthorizedHttp(credentials)
-        response = authorized_http.request(
-            'POST',
-            'https://www.googleapis.com/gmail/v1/users/me/messages/send',
-            body=msg.as_string()
-        )
-        print("Email sent successfully")
+        message = {'raw': raw}
+        sent_message = service.users().messages().send(userId='me', body=message).execute()
+        print(f"Email sent successfully: {sent_message['id']}")
+    except HttpError as error:
+        print(f"An error occurred: {error}")
     except Exception as e:
         print(f"Error: {e}")
 
