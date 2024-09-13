@@ -40,5 +40,7 @@ if __name__ == '__main__':
     
     sender_email = os.environ['EMAIL_ADDRESS']
     responses = os.environ['FORM_RESPONSES']
+    print(type(responses))
+    print(len(responses))
     print(responses[1])
     #send_email(sender_email, args.recepient_email, 'test.pptx')
