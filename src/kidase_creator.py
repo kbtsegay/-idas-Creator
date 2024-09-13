@@ -113,5 +113,5 @@ class KidaseCreator:
                     self.format_slide(slide, self.slide_settings)
             else:
                 raise ValueError("Only up to 4 languages are supported.")
-        # Save the presentation
-        prs.save('test.pptx')
+
+        return prs
