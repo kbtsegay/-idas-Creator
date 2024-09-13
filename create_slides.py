@@ -1,7 +1,7 @@
 import os
 import base64
 import yagmail
-from argparse import ArgumentParser
+import datetime
 from src.kidase_creator import KidaseCreator
 
 def decode_credentials(encoded):
@@ -16,8 +16,8 @@ def send_email(file_path, recipient_email):
     yag = yagmail.SMTP("kidasecreator.noreply@gmail.com", oauth2_file="./credentials.json")
     
     # Create the email content
-    subject = "Your Presentation"
-    body = "Please find the attached presentation."
+    subject = "Your Kidase Slide Deck"
+    body = f"Please find your Kidase PowerPoint presentation for {datetime.datetime.now().strftime('%B %d, %Y')} attached."
     
     # Send the email with the attachment
     yag.send(
@@ -29,15 +29,15 @@ def send_email(file_path, recipient_email):
 
 # Example usage
 if __name__ == '__main__':
-    parser = ArgumentParser(description='Decode the base64 encoded credentials')
-    parser.add_argument('encoded', type=str, help='The base64 encoded credentials')
-    args = parser.parse_args()
-
+    encoded = os.environ['GOOGLE_CREDENTIALS']
+    print(encoded)
     print('Decoding credentials...')
-    decode_credentials(args.encoded)
+    decode_credentials(encoded)
 
     kidase_creator = KidaseCreator('./data', ['ግእዝ', 'ትግርኛ', 'english'])
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
-
-    send_email('test.pptx', 'kaleb.tsegay@gmail.com')
+    
+    responses = os.environ['FORM_RESPONSES']
+    print(responses)
+    send_email('test.pptx', args.recepient_email)

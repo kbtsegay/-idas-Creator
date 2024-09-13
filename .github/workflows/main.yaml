@@ -31,5 +31,6 @@ jobs:
       
       - name: Run script
         env:
-          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDR }}
-        run: python create_slides.py "${{ secrets.GOOGLE_CREDENTIALS }}"
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          FORM_RESPONSES: ${{ github.event.client_payload.formResponses }}
+        run: python create_slides.py 
