@@ -2,4 +2,4 @@ pandas
 python-pptx
 openpyxl
 tqdm
-google
+google-auth
