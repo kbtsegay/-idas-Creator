@@ -8,8 +8,18 @@ from src.kidase_creator import KidaseCreator
 
 def send_email(file_path, recipient_email):
     try:
+        email_address = os.getenv('EMAIL_ADDRESS')
+        email_password = os.getenv('EMAIL_PASSWORD')
+        
+        # Debugging statements
+        print(f"EMAIL_ADDRESS: {email_address}")
+        print(f"EMAIL_PASSWORD: {email_password}")
+
+        if email_address is None or email_password is None:
+            raise ValueError("Email address or password environment variables are not set")
+
         msg = MIMEMultipart()
-        msg['From'] = os.getenv('EMAIL_ADDRESS')
+        msg['From'] = email_address
         msg['To'] = recipient_email
         msg['Subject'] = f'Your Kidase Slidedeck for {datetime.datetime.now().strftime("%B %d, %Y")}'
 
@@ -21,8 +31,8 @@ def send_email(file_path, recipient_email):
 
         server = smtplib.SMTP('smtp.gmail.com', 587)  # Update this line with the correct SMTP server
         server.starttls()
-        server.login(os.getenv('EMAIL_ADDRESS'), os.getenv('EMAIL_PASSWORD'))
-        server.sendmail(os.getenv('EMAIL_ADDRESS'), recipient_email, msg.as_string())
+        server.login(email_address, email_password)
+        server.sendmail(email_address, recipient_email, msg.as_string())
         server.quit()
         print("Email sent successfully")
     except Exception as e:
@@ -34,3 +44,4 @@ if __name__ == '__main__':
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
     send_email('test.pptx', 'kaleb.tsegay@gmail.com')
+
