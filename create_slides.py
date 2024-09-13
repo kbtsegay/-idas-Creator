@@ -4,22 +4,23 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+from google.oauth2 import service_account
+from google.auth.transport.requests import Request
+from google.auth.transport.urllib3 import AuthorizedHttp
 from src.kidase_creator import KidaseCreator
 
 def send_email(file_path, recipient_email):
     try:
-        email_address = os.getenv('EMAIL_ADDRESS')
-        email_password = os.getenv('EMAIL_PASSWORD')
+        # Load OAuth 2.0 credentials
+        credentials = service_account.Credentials.from_service_account_file(
+            'credentials.json',
+            scopes=['https://www.googleapis.com/auth/gmail.send']
+        )
+        credentials.refresh(Request())
         
-        # Debugging statements
-        print(f"EMAIL_ADDRESS: {email_address}")
-        print(f"EMAIL_PASSWORD: {email_password}")
-
-        if email_address is None or email_password is None:
-            raise ValueError("Email address or password environment variables are not set")
-
+        # Create the email
         msg = MIMEMultipart()
-        msg['From'] = email_address
+        msg['From'] = 'your-email@gmail.com'
         msg['To'] = recipient_email
         msg['Subject'] = f'Your Kidase Slidedeck for {datetime.datetime.now().strftime("%B %d, %Y")}'
 
@@ -29,11 +30,13 @@ def send_email(file_path, recipient_email):
         part.add_header('Content-Disposition', f'attachment; filename="{os.path.basename(file_path)}"')
         msg.attach(part)
 
-        server = smtplib.SMTP('smtp.gmail.com', 587)  # Update this line with the correct SMTP server
-        server.starttls()
-        server.login(email_address, email_password)
-        server.sendmail(email_address, recipient_email, msg.as_string())
-        server.quit()
+        # Send the email
+        authorized_http = AuthorizedHttp(credentials)
+        response = authorized_http.request(
+            'POST',
+            'https://www.googleapis.com/gmail/v1/users/me/messages/send',
+            body=msg.as_string()
+        )
         print("Email sent successfully")
     except Exception as e:
         print(f"Error: {e}")
@@ -44,4 +47,3 @@ if __name__ == '__main__':
     prs = kidase_creator.create_presentation()
     prs.save('test.pptx')
     send_email('test.pptx', 'kaleb.tsegay@gmail.com')
-
