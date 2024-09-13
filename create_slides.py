@@ -41,7 +41,5 @@ if __name__ == '__main__':
     
     sender_email = os.environ['EMAIL_ADDRESS']
     responses = json.loads(os.environ['FORM_RESPONSES'])
-    print(responses)
-    print(len(responses))
-    print(type(responses))
-    #send_email(sender_email, args.recepient_email, 'test.pptx')
+    recipient_email = responses[1]
+    send_email(sender_email, recipient_email, 'test.pptx')
