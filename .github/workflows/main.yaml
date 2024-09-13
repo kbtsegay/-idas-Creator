@@ -18,6 +18,9 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
+        env:
+          EMAIL_ADDRESS: ${{ secrets.BABS_EMAIL_ADDR }}
+          EMAIL_PASSWORD: ${{ secrets.BABS_EMAIL_PASS }}
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
