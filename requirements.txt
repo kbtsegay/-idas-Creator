@@ -2,7 +2,4 @@ pandas
 python-pptx
 openpyxl
 tqdm
-google-auth
-requests
-packaging
-google-api-python-client
+yagmail
