@@ -33,5 +33,5 @@ jobs:
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDR }}
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          FORM_RESPONSES: ${{ github.event.client_payload.formResponses }}
+          FORM_RESPONSES: ${{ toJson(github.event.client_payload.formResponses) }}
         run: python create_slides.py 
